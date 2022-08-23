@@ -3,6 +3,22 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 ruby '3.0.4'
 
+gem 'aws-sdk-s3'
+gem 'doorkeeper', '5.3'
+gem 'doorkeeper-grants_assertion'
+gem 'dotenv-rails'
+gem 'faker'
+gem 'faraday'
+gem 'multi_json'
+gem 'pundit'
+gem 'reform', '>= 2.2.0'
+gem 'reform-rails'
+gem 'representable'
+gem 'sidekiq'
+gem 'swagger-blocks'
+gem 'trailblazer', '>= 2.1.0'
+gem 'trailblazer-rails'
+
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails', branch: 'main'
 gem 'rails', '~> 6.1.6'
 # Use postgresql as the database for Active Record
