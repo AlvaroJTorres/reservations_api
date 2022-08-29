@@ -38,13 +38,13 @@ RUN gem install bundler -v 2.3.16
 RUN mkdir -p $RAILS_ROOT
 RUN bundle config — path=$GEM_HOME
 
-WORKDIR $RAILS_ROOT
+WORKDIR /app
 
 COPY Gemfile ./
 COPY Gemfile.lock ./
 
 RUN bundle check || bundle install
 
-COPY . $RAILS_ROOT
+COPY . /app
 
 ENTRYPOINT ["./entrypoints/docker-entrypoint.sh"]
