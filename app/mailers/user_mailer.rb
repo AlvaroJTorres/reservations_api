@@ -9,4 +9,12 @@ class UserMailer < ApplicationMailer
 
     mail(from: @restaurant.user.email, to: @customer.email, subject: 'Reservation Code')
   end
+
+  def daily_report_email
+    @manager = params[:manager]
+    @reservations = params[:reservations]
+    @concurred_hours = params[:concurred_hours]
+
+    mail(to: @manager.email, subject: 'Daily Report')
+  end
 end
