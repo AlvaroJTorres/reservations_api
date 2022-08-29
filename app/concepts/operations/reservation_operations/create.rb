@@ -10,6 +10,7 @@ module Operations
       pass :save_model
       pass :find_restaurant
       pass :send_mail
+      pass :add_job
       pass :representer
 
       def new_model(options, **)
@@ -39,6 +40,10 @@ module Operations
       def send_mail(options, model:, user:, **)
         UserMailer.with(customer: user, restaurant: options[:restaurant],
                         reservation: model).customer_code_email.deliver_later
+      end
+
+      def add_job(_options, model:, **)
+        ReservationCancelationJob.set(wait_until: model.datetime + 30.minutes).perform_later(model)
       end
 
       def representer(options, model:, **)
