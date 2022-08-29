@@ -17,7 +17,7 @@ gem 'reform', '>= 2.2.0'
 gem 'reform-rails'
 gem 'representable'
 gem 'sidekiq'
-gem 'simplecov'
+gem 'sidekiq-scheduler'
 gem 'swagger-blocks'
 gem 'trailblazer', '>= 2.1.0'
 gem 'trailblazer-rails'
@@ -47,6 +47,8 @@ gem 'bootsnap', '>= 1.4.4', require: false
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platforms: %i[mri mingw x64_mingw]
+  gem 'rspec-rails'
+  gem 'simplecov'
 end
 
 group :development do
