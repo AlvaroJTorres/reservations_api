@@ -1,0 +1,6 @@
+:schedule:
+  SendDailyMail:
+    # every: '1m'
+    every: ['24h', first_in: '8h']
+    class: DailyStatusJob
+    description: 'This job sends daily mails to managers'
