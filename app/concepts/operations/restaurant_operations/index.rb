@@ -12,7 +12,6 @@ module Operations
       end
 
       def representer(options, model:, **)
-        p options[:model]
         options[:model] = Representers::RestaurantRepresenter.for_collection.new(model)
       end
     end
