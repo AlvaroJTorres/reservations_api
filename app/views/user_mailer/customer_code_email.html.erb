@@ -1,9 +1,18 @@
 <html>
   <head>
     <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+    <style type="text/css" media="screen">
+      h1 { color: #A52A2A; }
+      .code { color: #DC143C;
+              font-size: 22px; }
+    </style>
   </head>
   <body>
-    <h1><%= @customer.name %></h1>
-    <p><%= @reservation.customer_code %></p>
+    <h1>Dear Customer <%= @customer.name %></h1>
+    <p><%= @restaurant.name %> is glad to have you on the: </p>
+    <p> <%= @reservation.datetime.strftime('%d of %B') %> at: <%= @reservation.datetime.strftime('%I:%M %p') %></p>
+    
+    <p>Your code for your reservation is the following: </p>
+      <p class="code"><%= @reservation.customer_code %></p>
   </body>
 </html>

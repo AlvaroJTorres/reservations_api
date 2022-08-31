@@ -1,10 +1,25 @@
 <html>
   <head>
     <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+    <style type="text/css" media="screen">
+      h1 { color: #A52A2A; }
+      span {color: #008B8B; }
+      li {font-size: 22px;}
+    </style>
   </head>
   <body>
-    <h1><%= @manager.name %></h1>
-    <p><%= @reservations %></p>
-    <p><%= @concurred_hours %></p>
+    <h1>Daily Report of restaurant <span><%= @manager.restaurant.name %></span></h1>
+    <h2>Good afternoon manager <span><%= @manager.name %></span></h2>
+
+    <p>Today's reservations were <span><%= @reservations %></span> reservations</p>
+
+    <p>Most concurred hours: </p>
+    <ul>  
+      <% @concurred_hours.each do |hours, tables| %>
+        <li>Hour: <%= hours %> amount of tables: <%= tables %></li>
+      <% end %>
+    </ul>
+
+    <p>Thanks for today's work</p>
   </body>
 </html>
