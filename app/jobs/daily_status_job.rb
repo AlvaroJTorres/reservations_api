@@ -21,7 +21,7 @@ class DailyStatusJob < ApplicationJob
   end
 
   def concurred_hours(query)
-    query = query.group(:datetime).count
-    query.select { |_k, v| v == query.values.max }.keys
+    hash = query.group(:datetime).count
+    hash.select { |_k, v| v == hash.values.max }.transform_keys { |k| k.strftime('%I:%M %p') }
   end
 end
