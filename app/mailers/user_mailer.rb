@@ -7,7 +7,7 @@ class UserMailer < ApplicationMailer
     @restaurant = params[:restaurant]
     @reservation = params[:reservation]
 
-    mail(from: @restaurant.user.email, to: @customer.email, subject: 'Reservation Code')
+    mail(from: @restaurant.user.email, to: @customer.email, subject: 'Reservation Code', content_type: 'text/html')
   end
 
   def daily_report_email
@@ -15,6 +15,6 @@ class UserMailer < ApplicationMailer
     @reservations = params[:reservations]
     @concurred_hours = params[:concurred_hours]
 
-    mail(to: @manager.email, subject: 'Daily Report')
+    mail(to: @manager.email, subject: 'Daily Report', content_type: 'text/html')
   end
 end
