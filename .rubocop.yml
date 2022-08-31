@@ -13,11 +13,11 @@ AllCops:
     - "app/docs/**"
 Metrics/ClassLength:
   Exclude:
-    - "test/**/**"
+    - "spec/**/**"
 Layout/LineLength:
   Max: 120
   Exclude:
-    - "test/**/**"
+    - "spec/**/**"
 Metrics/MethodLength:
   Max: 15
 Style/SignalException:
@@ -29,3 +29,6 @@ Lint/UnreachableCode:
 Metrics/ParameterLists:
   Exclude:
     - "app/errors/**"
+Metrics/BlockLength:
+  Exclude:
+    - "spec/**/**"
