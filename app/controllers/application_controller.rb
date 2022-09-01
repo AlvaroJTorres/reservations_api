@@ -3,6 +3,7 @@
 # Methods for all controllers
 class ApplicationController < ActionController::API
   include ErrorHandler
+  include Pagy::Backend
 
   def doorkeeper_unauthorized_render_options(*)
     { json: { errors: ['Not authorized'] } }
