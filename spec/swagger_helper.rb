@@ -26,6 +26,14 @@ RSpec.configure do |config|
       host: '',
       basePath: '/',
       paths: {},
+      securityDefinitions: {
+        Bearer: {
+          description: '...',
+          type: :apiKey,
+          name: 'Authorization',
+          in: :header
+        }
+      },
       schemes: %w[
         http
         https
