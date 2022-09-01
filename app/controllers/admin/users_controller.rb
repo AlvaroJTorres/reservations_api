@@ -6,8 +6,8 @@ module Admin
     before_action -> { doorkeeper_authorize! :admin }
 
     def index
-      result = Operations::UserOperations::Index.call(params: {})
-      render json: { data: result[:model] }
+      result = Operations::UserOperations::Index.call(params: {}, pagy_call: method(:pagy))
+      render json: { data: result[:records] }.merge!(meta: { pagination: pagy_headers_hash(result[:pagy]) }), status: :ok
     end
 
     def create
