@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 describe 'Calendars', type: :request do
-  context 'authorized admin' do
+  context 'authorized manager' do
     let(:user)        { FactoryBot.create(:user, role: 2) }
     let(:token)       { FactoryBot.create(:access_token, resource_owner_id: user.id, scopes: 'manager') }
     let(:restaurant)  { FactoryBot.create(:restaurant) }
