@@ -11,7 +11,7 @@ module Querys
     end
 
     def available_tables(datetime)
-      return relation unless datetime.present?
+      return @restaurant.tables.where('deleted_at IS NULL') unless datetime.present?
 
       check_available(datetime)
 
