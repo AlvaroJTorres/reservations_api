@@ -2,7 +2,7 @@
 
 FactoryBot.define do
   factory :office_hour do
-    day { 'monday' }
+    day { 1 }
     open { '15:00' }
     close { '20:00' }
     association :restaurant

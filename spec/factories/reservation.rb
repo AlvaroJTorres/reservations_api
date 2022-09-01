@@ -2,7 +2,7 @@
 
 FactoryBot.define do
   factory :reservation do
-    table
+    association :table
     datetime { '29/08/2022-20:00' }
     customer_code { '12345' }
     status { 'reserved' }
