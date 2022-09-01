@@ -3,7 +3,7 @@
 # Preview all emails at http://localhost:3000/rails/mailers/user_mailer
 class UserMailerPreview < ActionMailer::Preview
   def customer_code_email
-    UserMailer.with(customer: User.find(3), restaurant: Restaurant.find(1), reservation: Reservation.find(6)).customer_code_email
+    UserMailer.with(customer: User.find(3), restaurant: Restaurant.find(1), reservation: Reservation.find(1)).customer_code_email
   end
 
   def daily_report_email
