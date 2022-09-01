@@ -121,3 +121,17 @@ puts 'Seeding tables'
 end
 
 puts 'Finished seeding tables'
+
+puts 'Seeding Reservations'
+table = Table.find(1)
+
+reservation_data = {
+    table_id: 1,
+    datetime: "05/09/2022-11:00",
+    customer_code: "1234567890",
+    status: 1
+}
+
+Reservation.create(reservation_data)
+
+puts 'Finished seeding reservations'
