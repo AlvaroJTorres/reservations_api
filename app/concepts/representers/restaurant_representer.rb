@@ -9,15 +9,11 @@ module Representers
     property :name
     property :address
     property :manager, exec_context: :decorator
-    property :tables, exec_context: :decorator
+    collection :tables, decorator: TableRepresenter
     collection :images, decorator: ImageRepresenter
 
     def manager
       represented.user_id
-    end
-
-    def tables
-      represented.tables
     end
   end
 end
