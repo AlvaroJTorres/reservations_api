@@ -6,13 +6,14 @@ RSpec.describe 'customer/restaurants', type: :request do
   path '/customer/restaurants' do
     get('list restaurants') do
       tags 'Restaurants'
-      parameter name: 'Authorization', in: :header, type: :string, default: 'Bearer '
+      security [Bearer: {}]
+
       response '200', :success do
         schema type: :object,
                properties:
         {
           data: {
-            type: :object,
+            type: :array,
             properties: {
               id: { type: :integer },
               name: { type: :string },
@@ -35,6 +36,10 @@ RSpec.describe 'customer/restaurants', type: :request do
             }
           }
         }
+
+        let(:user) { create(:user) }
+        let(:Authorization) { "Bearer #{create(:access_token, resource_owner_id: user.id, scopes: 'customer').token}" }
+        let(:restaurant) { create(:restaurant) }
         run_test!
       end
     end

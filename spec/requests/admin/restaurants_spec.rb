@@ -7,7 +7,7 @@ RSpec.describe '/admin/restaurants', type: :request do
     post('create a restaurant') do
       tags 'Restaurants'
       consumes 'application/json'
-      parameter name: 'Authorization', in: :header, type: :string, default: 'Bearer '
+      security [Bearer: {}]
       parameter name: :restaurant, in: :body, schema: {
         type: :object,
         properties:
@@ -25,21 +25,21 @@ RSpec.describe '/admin/restaurants', type: :request do
 
       response '401', :unauthorized do
         let(:Authorization) { '' }
-        let(:restaurant) { { title: 'Updated Restaurant', address: 'Updated address' } }
+        let(:restaurant) { { data: { name: 'New Restaurant', address: 'New address' } } }
         run_test!
       end
 
       response '201', :created do
         let!(:user) { create(:user, role: 1) }
-        let(:Authorization) { "Bearer #{create(:access_token, resource_owner_id: user.id, scopes: 'admin')}" }
-        let(:restaurant) { { name: 'New Restaurant', address: 'New address' } }
+        let(:Authorization) { "Bearer #{create(:access_token, resource_owner_id: user.id, scopes: 'admin').token}" }
+        let(:restaurant) { { data: { name: 'New Restaurant', address: 'New address' } } }
         run_test!
       end
 
       response '422', :invalid_request do
         let!(:user) { create(:user, role: 1) }
-        let(:Authorization) { "Bearer #{create(:access_token, resource_owner_id: user.id, scopes: 'admin')}" }
-        let(:restaurant) { { name: '' } }
+        let(:Authorization) { "Bearer #{create(:access_token, resource_owner_id: user.id, scopes: 'admin').token}" }
+        let(:restaurant) { { data: { name: '' } } }
         run_test!
       end
     end
@@ -49,7 +49,7 @@ RSpec.describe '/admin/restaurants', type: :request do
     patch('update restaurant') do
       tags 'Restaurants'
       parameter name: 'id', in: :path, type: :integer, description: 'id'
-      parameter name: 'Authorization', in: :header, type: :string, default: 'Bearer '
+      security [Bearer: {}]
       parameter name: :restaurant, in: :body, schema: {
         type: :object,
         properties:
@@ -66,35 +66,37 @@ RSpec.describe '/admin/restaurants', type: :request do
       }
 
       response '401', :unauthorized do
+        let!(:id) { create(:restaurant).id }
         let(:Authorization) { '' }
-        let(:restaurant) { { title: 'Updated Restaurant', address: 'Updated address' } }
+        let(:restaurant) { { data: { name: 'Update Restaurant' } } }
         run_test!
       end
 
       response '200', :success do
-        let(:user) { create(:user, role: 1) }
-        let(:id) { create(:restaurant).id }
-        let(:Authorization) { "Bearer #{create(:access_token, resource_owner_id: user.id, scopes: 'admin')}" }
-        let(:restaurant) { { title: 'Updated Restaurant', address: 'Updated address' } }
+        let!(:user) { create(:user, role: 1) }
+        let!(:id) { create(:restaurant).id }
+        let(:Authorization) { "Bearer #{create(:access_token, resource_owner_id: user.id, scopes: 'admin').token}" }
+        let(:restaurant) { { data: { name: 'Update Restaurant' } } }
         run_test!
       end
     end
 
     delete('delete restaurant') do
       tags 'Restaurants'
-      parameter name: :id, in: :path, type: :integer
-      parameter name: 'Authorization', in: :header, type: :string, default: 'Bearer '
+      parameter name: 'id', in: :path, type: :integer, description: 'id'
+      security [Bearer: {}]
 
       response '204', :no_content do
         let(:user) { create(:user, role: 1) }
-        let(:Authorization) { "Bearer #{create(:access_token, resource_owner_id: user.id, scopes: 'admin')}" }
+        let(:Authorization) { "Bearer #{create(:access_token, resource_owner_id: user.id, scopes: 'admin').token}" }
         let(:id) { create(:restaurant).id }
         run_test!
       end
 
       response '401', :unauthorized do
+        let!(:id) { create(:restaurant).id }
         let(:Authorization) { '' }
-        let(:restaurant) { { title: 'Updated Restaurant', address: 'Updated address' } }
+        let(:restaurant) { create(:restaurant) }
         run_test!
       end
     end

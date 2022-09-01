@@ -8,7 +8,8 @@ RSpec.describe 'manager/office_hours', type: :request do
 
     post('create office_hour') do
       tags 'Office Hours'
-      parameter name: 'Authorization', in: :header, type: :string, default: 'Bearer '
+      consumes 'application/json'
+      security [Bearer: {}]
       parameter name: :office_hour, in: :body, schema: {
         type: :object,
         properties:
@@ -27,24 +28,24 @@ RSpec.describe 'manager/office_hours', type: :request do
 
       response '401', :unauthorized do
         let(:Authorization) { '' }
-        let(:restaurant) { create(:restaurant) }
-        let(:office_hour) { create(:office_hour, restaurant_id: restaurant.id) }
+        let(:restaurant_id) { create(:restaurant).id }
+        let(:office_hour)   { { data: { day: 1, open: '09:00', close: '20:00' } } }
         run_test!
       end
 
       response '201', :created do
-        let(:user) { create(:user, role: 2) }
-        let(:Authorization) { "Bearer #{create(:access_token, resource_owner_id: user.id, scopes: 'manager')}" }
-        let(:restaurant) { create(:restaurant) }
-        let(:office_hour) { create(:office_hour, restaurant_id: restaurant.id) }
+        let!(:user) { create(:user, role: 2) }
+        let(:Authorization) { "Bearer #{create(:access_token, resource_owner_id: user.id, scopes: 'manager').token}" }
+        let(:restaurant_id) { create(:restaurant).id }
+        let(:office_hour)   { { data: { day: 1, open: '09:00', close: '20:00' } } }
         run_test!
       end
 
       response '422', :invalid_request do
-        let(:user) { create(:user, role: 2) }
-        let(:Authorization) { "Bearer #{create(:access_token, resource_owner_id: user.id, scopes: 'manager')}" }
-        let(:restaurant) { create(:restaurant) }
-        let(:office_hour) { create(:office_hour, day: '') }
+        let!(:user) { create(:user, role: 2) }
+        let(:Authorization) { "Bearer #{create(:access_token, resource_owner_id: user.id, scopes: 'manager').token}" }
+        let(:restaurant_id) { create(:restaurant).id }
+        let(:office_hour)   { { data: { day: '', open: '', close: '' } } }
         run_test!
       end
     end
@@ -56,7 +57,7 @@ RSpec.describe 'manager/office_hours', type: :request do
 
     patch('update office_hour') do
       tags 'Office Hours'
-      parameter name: 'Authorization', in: :header, type: :string, default: 'Bearer '
+      security [Bearer: {}]
       parameter name: :office_hour, in: :body, schema: {
         type: :object,
         properties:
@@ -74,36 +75,38 @@ RSpec.describe 'manager/office_hours', type: :request do
 
       response '401', :unauthorized do
         let(:Authorization) { '' }
-        let(:restaurant) { create(:restaurant) }
-        let(:office_hour) { create(:office_hour, restaurant_id: restaurant.id) }
+        let(:restaurant_id) { create(:restaurant).id }
+        let(:id) { create(:office_hour, restaurant_id: restaurant_id).id }
+        let(:office_hour) { { data: { day: 3 } } }
         run_test!
       end
 
       response '200', :success do
-        let(:user) { create(:user, role: 2) }
-        let(:Authorization) { "Bearer #{create(:access_token, resource_owner_id: user.id, scopes: 'manager')}" }
-        let(:restaurant) { create(:restaurant) }
-        let(:office_hour) { { day: 4 } }
+        let!(:user) { create(:user, role: 2) }
+        let(:Authorization) { "Bearer #{create(:access_token, resource_owner_id: user.id, scopes: 'manager').token}" }
+        let(:restaurant_id) { create(:restaurant).id }
+        let(:id) { create(:office_hour, restaurant_id: restaurant_id).id }
+        let(:office_hour) { { data: { day: 3 } } }
         run_test!
       end
     end
 
     delete('delete office_hour') do
       tags 'Office Hours'
-      parameter name: 'Authorization', in: :header, type: :string, default: 'Bearer '
+      security [Bearer: {}]
 
       response '204', :no_content do
-        let(:user) { create(:user, role: 2) }
-        let(:Authorization) { "Bearer #{create(:access_token, resource_owner_id: user.id, scopes: 'manager')}" }
-        let(:restaurant) { create(:restaurant) }
-        let(:office_hour) { create(:office_hour, restaurant_id: restaurant.id) }
+        let!(:user) { create(:user, role: 2) }
+        let(:Authorization) { "Bearer #{create(:access_token, resource_owner_id: user.id, scopes: 'manager').token}" }
+        let(:restaurant_id) { create(:restaurant).id }
+        let(:id) { create(:office_hour, restaurant_id: restaurant_id).id }
         run_test!
       end
 
       response '401', :unauthorized do
         let(:Authorization) { '' }
-        let(:restaurant) { create(:restaurant) }
-        let(:office_hour) { create(:office_hour, restaurant_id: restaurant.id) }
+        let(:restaurant_id) { create(:restaurant).id }
+        let(:id) { create(:office_hour, restaurant_id: restaurant_id).id }
         run_test!
       end
     end

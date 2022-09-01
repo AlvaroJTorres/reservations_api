@@ -8,14 +8,11 @@ RSpec.describe 'manager/reservations', type: :request do
 
     get('show reservation') do
       tags 'Reservations'
-      parameter name: 'Authorization', in: :header, type: :string, default: 'Bearer '
+      security [Bearer: {}]
 
       response '401', :unauthorized do
         let(:Authorization) { '' }
-        let(:restaurant) { create(:restaurant) }
-        let(:restaurant) { create(:restaurant) }
-        let(:table) { create(:table, restaurant_id: restaurant.id) }
-        let(:reservation) { create(:reservation, table_id: table.id, customer_code: '123456789') }
+        let(:customer_code) { create(:reservation).customer_code }
         run_test!
       end
 
@@ -29,6 +26,9 @@ RSpec.describe 'manager/reservations', type: :request do
                  status: { type: :string },
                  customer_code: { type: :string }
                }
+        let!(:user) { create(:user, role: 2) }
+        let(:Authorization) { "Bearer #{create(:access_token, resource_owner_id: user.id, scopes: 'manager').token}" }
+        let(:customer_code) { create(:reservation).customer_code }
         run_test!
       end
     end
@@ -39,19 +39,14 @@ RSpec.describe 'manager/reservations', type: :request do
 
       response '401', :unauthorized do
         let(:Authorization) { '' }
-        let(:restaurant) { create(:restaurant) }
-        let(:restaurant) { create(:restaurant) }
-        let(:table) { create(:table, restaurant_id: restaurant.id) }
-        let(:reservation) { create(:reservation, table_id: table.id, customer_code: '123456789') }
+        let(:customer_code) { create(:reservation).customer_code }
         run_test!
       end
 
       response '200', :success do
         let!(:user) { create(:user, role: 2) }
-        let(:Authorization) { "Bearer #{create(:access_token, resource_owner_id: user.id, scopes: 'admin')}" }
-        let(:restaurant) { create(:restaurant) }
-        let(:table) { create(:table, restaurant_id: restaurant.id) }
-        let(:reservation) { create(:reservation, table_id: table.id, customer_code: '123456789') }
+        let(:Authorization) { "Bearer #{create(:access_token, resource_owner_id: user.id, scopes: 'manager').token}" }
+        let(:customer_code) { create(:reservation).customer_code }
         run_test!
       end
     end
@@ -62,19 +57,14 @@ RSpec.describe 'manager/reservations', type: :request do
 
       response '204', :no_content do
         let!(:user) { create(:user, role: 2) }
-        let(:Authorization) { "Bearer #{create(:access_token, resource_owner_id: user.id, scopes: 'admin')}" }
-        let(:restaurant) { create(:restaurant) }
-        let(:table) { create(:table, restaurant_id: restaurant.id) }
-        let(:reservation) { create(:reservation, table_id: table.id, customer_code: '123456789') }
+        let(:Authorization) { "Bearer #{create(:access_token, resource_owner_id: user.id, scopes: 'manager').token}" }
+        let(:customer_code) { create(:reservation).customer_code }
         run_test!
       end
 
       response '401', :unauthorized do
         let(:Authorization) { '' }
-        let(:restaurant) { create(:restaurant) }
-        let(:restaurant) { create(:restaurant) }
-        let(:table) { create(:table, restaurant_id: restaurant.id) }
-        let(:reservation) { create(:reservation, table_id: table.id, customer_code: '123456789') }
+        let(:customer_code) { create(:reservation).customer_code }
         run_test!
       end
     end

@@ -6,35 +6,35 @@ RSpec.describe 'admin/users', type: :request do
   path '/admin/users' do
     get('list managers') do
       tags 'Managers'
-      parameter name: 'Authorization', in: :header, type: :string, default: 'Bearer '
+      security [Bearer: {}]
+
       response '200', :success do
         schema type: :object,
                properties: {
-                 collection: {
+                 data: {
                    type: :array,
-                   items: {
-                     type: :object,
-                     properties: {
-                       id: { type: :integer },
-                       name: { type: :string },
-                       email: { type: :string },
-                       role: { type: :string }
-                     }
+                   properties: {
+                     id: { type: :integer },
+                     name: { type: :string },
+                     email: { type: :string },
+                     role: { type: :string }
                    }
                  }
                }
+
+        let(:user) { create(:user, role: 2) }
+        let(:Authorization) { "Bearer #{create(:access_token, resource_owner_id: user.id, scopes: 'admin').token}" }
         run_test!
       end
     end
 
     post('create manager') do
-      response(200, 'successful') do
-        tags 'Managers'
-        consumes 'application/json'
-        parameter name: 'Authorization', in: :header, type: :string, default: 'Bearer '
-        parameter name: :user, in: :body, schema: {
-          type: :object,
-          properties:
+      tags 'Managers'
+      consumes 'application/json'
+      security [Bearer: {}]
+      parameter name: :user, in: :body, schema: {
+        type: :object,
+        properties:
         {
           data: {
             type: :object,
@@ -45,74 +45,78 @@ RSpec.describe 'admin/users', type: :request do
             }
           }
         },
-          required: %w[name address]
-        }
+        required: %w[name email restaurant_id]
+      }
 
-        response '401', :unauthorized do
-          let(:Authorization) { '' }
-          let(:restaurant) { { name: 'New Restaurant', address: 'New address' } }
-          let(:user) { { name: 'New User', email: 'newemail@mail.com', restaurant_id: restaurant.id } }
-          run_test!
-        end
+      response '401', :unauthorized do
+        let!(:admin) { create(:user, role: 1) }
+        let(:Authorization) { '' }
+        let(:restaurant) { create(:restaurant) }
+        let(:user) { { data: { name: 'New User', email: 'newemail@mail.com', restaurant_id: restaurant.id } } }
+        run_test!
+      end
 
-        response '201', :created do
-          let!(:user) { create(:user, role: 1) }
-          let(:Authorization) { "Bearer #{create(:access_token, resource_owner_id: user.id, scopes: 'admin')}" }
-          let(:restaurant) { { name: 'New Restaurant', address: 'New address' } }
-          let(:manager) { { name: 'New User', email: 'newemail@mail.com', restaurant_id: restaurant.id } }
-          run_test!
-        end
+      response '201', :created do
+        let!(:admin) { create(:user, role: 1) }
+        let(:Authorization) { "Bearer #{create(:access_token, resource_owner_id: admin.id, scopes: 'admin').token}" }
+        let(:restaurant) { create(:restaurant) }
+        let(:user) { { data: { name: 'New User', email: 'newemail@mail.com', restaurant_id: restaurant.id } } }
+        run_test!
+      end
 
-        response '422', :invalid_request do
-          let!(:user) { create(:user, role: 1) }
-          let(:Authorization) { "Bearer #{create(:access_token, resource_owner_id: user.id, scopes: 'admin')}" }
-          let(:restaurant) { { name: 'New Restaurant', address: 'New address' } }
-          let(:manager) { { name: 'New User' } }
-          run_test!
-        end
+      response '422', :invalid_request do
+        let!(:admin) { create(:user, role: 1) }
+        let(:Authorization) { "Bearer #{create(:access_token, resource_owner_id: admin.id, scopes: 'admin').token}" }
+        let(:restaurant) { create(:restaurant) }
+        let(:user) { { data: { name: '', email: '', restaurant_id: restaurant.id } } }
+        run_test!
       end
     end
 
     path '/admin/users/{id}' do
       patch('update manager') do
         tags 'Managers'
-        parameter name: 'id', in: :path, type: :string, description: 'id'
-        parameter name: 'Authorization', in: :header, type: :string, default: 'Bearer '
+        parameter name: 'id', in: :path, type: :integer, description: 'id'
+        security [Bearer: {}]
         parameter name: :user, in: :body, schema: {
           type: :object,
           properties:
-        {
-          data: {
-            type: :object,
-            properties: {
-              name: { type: :string },
-              email: { type: :string },
-              restaurant_id: { type: :integer }
+            {
+              data: {
+                type: :object,
+                properties: {
+                  name: { type: :string },
+                  email: { type: :string },
+                  restaurant_id: { type: :integer }
+                }
+              }
             }
-          }
-        }
         }
 
         response '401', :unauthorized do
+          let!(:admin) { create(:user, role: 1) }
+          let!(:id) { create(:user).id }
           let(:Authorization) { '' }
-          let(:restaurant) { { name: 'New Restaurant', address: 'New address' } }
-          let(:manager) { { name: 'New User', email: 'newemail@mail.com', restaurant_id: restaurant.id } }
+          let(:restaurant) { create(:restaurant) }
+          let(:user) { { data: { name: 'Update User' } } }
           run_test!
         end
 
         response '200', :success do
-          let!(:user) { create(:user, role: 1) }
-          let(:Authorization) { "Bearer #{create(:access_token, resource_owner_id: user.id, scopes: 'admin')}" }
-          let(:restaurant) { { name: 'New Restaurant', address: 'New address' } }
-          let(:manager) { { name: 'Update Manager' } }
+          let!(:admin) { create(:user, role: 1) }
+          let!(:id) { create(:user).id }
+          let(:Authorization) { "Bearer #{create(:access_token, resource_owner_id: admin.id, scopes: 'admin').token}" }
+          let(:restaurant) { create(:restaurant) }
+          let(:user) { { data: { name: 'Update User' } } }
           run_test!
         end
 
         response '422', :invalid_request do
-          let!(:user) { create(:user, role: 1) }
-          let(:Authorization) { "Bearer #{create(:access_token, resource_owner_id: user.id, scopes: 'admin')}" }
-          let(:restaurant) { { name: 'New Restaurant', address: 'New address' } }
-          let(:manager) { { name: '' } }
+          let!(:admin) { create(:user, role: 1) }
+          let!(:id) { create(:user).id }
+          let(:Authorization) { "Bearer #{create(:access_token, resource_owner_id: admin.id, scopes: 'admin').token}" }
+          let(:restaurant) { create(:restaurant) }
+          let(:user) { { data: { name: '' } } }
           run_test!
         end
       end
