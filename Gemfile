@@ -17,6 +17,8 @@ gem 'pundit'
 gem 'reform', '>= 2.2.0'
 gem 'reform-rails'
 gem 'representable'
+gem 'rswag-api'
+gem 'rswag-ui'
 gem 'sidekiq'
 gem 'sidekiq-scheduler'
 gem 'swagger-blocks'
@@ -50,6 +52,7 @@ group :development, :test do
   gem 'byebug', platforms: %i[mri mingw x64_mingw]
   gem 'factory_bot_rails'
   gem 'rspec-rails'
+  gem 'rswag-specs'
   gem 'simplecov'
 end
 
