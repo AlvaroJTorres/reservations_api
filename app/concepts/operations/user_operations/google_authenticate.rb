@@ -32,10 +32,13 @@ module Operations
       end
 
       def define_user(options, **)
-        options[:model] = if User.find_by(gmail_id: options[:user_data]['id'])
-                            User.find_by(gmail_id: options[:user_data]['id'])
-                          elsif User.find_by(email: options[:user_data]['id'])
-                            google_id_to_manager(options[:user_data])
+        user_by_id = User.find_by(gmail_id: options[:user_data]['id'])
+        user_by_email = User.find_by(email: options[:user_data]['emails'][0]['value'])
+
+        options[:model] = if user_by_id
+                            user_by_id
+                          elsif user_by_email
+                            google_id_to_manager(user_by_email, options[:user_data])
                           else
                             result = Operations::UserOperations::GoogleCreate.call(params: options[:user_data])
                             result[:model]
@@ -44,8 +47,7 @@ module Operations
 
       private
 
-      def google_id_to_manager(user_data)
-        model = User.find_by(email: user_data['emails'][0]['value'])
+      def google_id_to_manager(model, user_data)
         model.gmail_id = user_data['id']
         model.save
       end

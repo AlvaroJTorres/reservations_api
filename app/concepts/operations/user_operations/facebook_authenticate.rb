@@ -32,11 +32,15 @@ module Operations
         options[:user_data] = JSON.parse(options[:response].body)
       end
 
-      def define_user(options, **)
-        options[:model] = if User.find_by(facebook_id: options[:user_data]['id'])
-                            User.find_by(facebook_id: options[:user_data]['id'])
+      def define_user(options, params:, **)
+        user = User.find_by(facebook_id: options[:user_data]['id'])
+
+        options[:model] = if user
+                            user
                           else
-                            result = Operations::UserOperations::FacebookCreate.call(params: options[:user_data], connection: options[:fb_conn])
+                            result = Operations::UserOperations::FacebookCreate.call(params: options[:user_data],
+                                                                                     assertion: params[:assertion],
+                                                                                     connection: options[:fb_conn])
                             result[:model]
                           end
       end
