@@ -768,13 +768,40 @@
 					"response": []
 				},
 				{
-					"name": "Customer Authentication",
+					"name": "Customer Authentication Fb",
 					"request": {
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"grant_type\": \"assertion\",\r\n    \"provider\": \"facebook\",\r\n    \"assertion\": \"EAAYwRCCVZAX8BAHKFhZBMlitDl8qdzdxzV43mZA9Wrw65q5ckGYBZC0si5Mpas4sfhwjgKZCkXKIEF1TRYt27zgw3JAQZB0gzHZCW8OX87XPjp65TIe6r7XaKB5GLzj1tpWxKTURDyX1hxKVO1qCAyV4RSBblZAHp0ZBlJCy65qxjqcs8cCD0zlV13zrCrBhPWZCqB4ugKsGltFComjk50PisorzYj4hye1CSeWZB7WzJ79RFTyZCGugejurFVKK5tR2OmgZD\",\r\n    \"scope\": \"customer\"\r\n}",
+							"raw": "{\r\n    \"grant_type\": \"assertion\",\r\n    \"provider\": \"facebook\",\r\n    \"assertion\": \"EAAYwRCCVZAX8BAE1ALH3dMBTBaHdCOYGDlYPQuD3VA67uR7woblG24rGLHHZBv3MWnKutFZCFMmteJ2bjgjpaWO2CUsmU654oRro2RIIOFFsDn6vmJaf40PQFvNaC2khmJiyczZAA3B1VkpqnyzZCqHNhQwPh79J92LPu9VgZBO7GdxUwZAFgLffdTZBjLtd5aDHADlO1Hlrfx7AXVlKvDB3cZCEdxvGy6QY70TUzan4njzqaLCteoLJ0mVEWWlAtfekZD\",\r\n    \"scope\": \"customer\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/oauth/token",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"oauth",
+								"token"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Customer Authentication Google",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"grant_type\": \"assertion\",\r\n    \"provider\": \"google\",\r\n    \"assertion\": \"ya29.a0AVA9y1sgYSptQmHpY_rJ0tUqNbdEEVoVjADBlcBltS1_nSu8aOia2tcPxHVszLwhYgVG7h5yeKfIQ07BlFiEyiCIdf9PM_dawLzOA52kiox9d2DGCkXdipXWGjzEWc20NyCDl1u67JJFZzE9zO1sf5irWIyNaCgYKATASAQASFQE65dr8g0P4JB1MrXVRRRwy9MZFkQ0163\",\r\n    \"scope\": \"customer\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
