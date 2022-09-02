@@ -11,12 +11,12 @@
     <h1>Daily Report of restaurant <span><%= @manager.restaurant.name %></span></h1>
     <h2>Good afternoon manager <span><%= @manager.name %></span></h2>
 
-    <p>Today's reservations were <span><%= @reservations %></span> reservations</p>
+    <p>Today the restaurant had <span><%= @reservations %></span> reservations</p>
 
     <p>Most concurred hours: </p>
     <ul>  
       <% @concurred_hours.each do |hours, tables| %>
-        <li>Hour: <%= hours %> amount of tables: <%= tables %></li>
+        <li>Hour: <%= hours %> / tables reserved: <%= tables %></li>
       <% end %>
     </ul>
 
