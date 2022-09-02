@@ -3,11 +3,11 @@
 # Preview all emails at http://localhost:3000/rails/mailers/user_mailer
 class UserMailerPreview < ActionMailer::Preview
   def customer_code_email
-    UserMailer.with(customer: User.find(3), restaurant: Restaurant.find(1), reservation: Reservation.find(1)).customer_code_email
+    UserMailer.with(customer: User.find_by(role: 0), restaurant: Restaurant.find(1), reservation: Reservation.find(1)).customer_code_email
   end
 
   def daily_report_email
-    UserMailer.with(manager: User.find(2), reservations: 10, concurred_hours: concurred_hours).daily_report_email
+    UserMailer.with(manager: User.find_by(role: 2), reservations: 10, concurred_hours: concurred_hours).daily_report_email
   end
 
   private
