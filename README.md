@@ -1,24 +1,26 @@
 # README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+# Reservations API
 
-Things you may want to cover:
+## Install
 
-* Ruby version
+### Clone the repository
 
-* System dependencies
+```shell
+git clone git@github.com:AlvaroJTorres/reservations_api.git
+```
 
-* Configuration
+### Docker
 
-* Database creation
+Build the containers before initializing the app
 
-* Database initialization
+```shell
+docker-compose build
+docker-compose up
+```
 
-* How to run the test suite
+## Test the API
 
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+```shell
+Visit http://localhost:3000/api-docs
+```
