@@ -5,7 +5,7 @@ class DailyStatusJob < ApplicationJob
   queue_as :default
 
   def perform
-    User.where(role: 2).each do |manager|
+    User.where(role: :manager).each do |manager|
       daily_reservations = Querys::ReservationsQuery.new(manager.restaurant).daily_reservations
 
       UserMailer.with(manager: manager,
