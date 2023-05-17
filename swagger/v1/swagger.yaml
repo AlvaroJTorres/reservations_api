@@ -3,13 +3,650 @@ swagger: '2.0'
 info:
   title: Rswag Example REST API
   version: 1.0.0
-  description: Rswag Example REST API
+  description: '
+          **NOTE**: To authorize an user, login with **oauth/token** endpoint, copy the the access token, click on *Authorize button* and paste the access token with the word *Bearer* before the token.
+
+          **NOTE**: To get the assertion, go to Google OAuth Playground and follow the steps:
+
+          - In Step 1 select Google OAuth2 API v2 and click the first 2 options.
+
+          - Then click on Authorize APIs.
+
+          - It will prompt a login page, log with any user.
+
+          - In Step 2 click on "Exchange authorization code for tokens".
+          
+          - Finally copy the access token in the OAuth request.
+
+          ```
+
+          {
+          
+            -- grant_type: assertion,
+
+            -- provider: google,
+
+            -- assertion: COPY HERE THE TOKEN FROM GOOGLE OAUTH PLAYGROUND,
+
+            -- scope: manager, customer or admin
+
+          }
+
+          ```'
 host: ''
 basePath: "/"
-paths: {}
+paths:
+  "/admin/restaurants":
+    post:
+      summary: create a restaurant
+      tags:
+      - Restaurants
+      consumes:
+      - application/json
+      security:
+      - Bearer: {}
+      parameters:
+      - name: restaurant
+        in: body
+        schema:
+          type: object
+          properties:
+            data:
+              type: object
+              properties:
+                name:
+                  type: string
+                address:
+                  type: string
+          required:
+          - name
+          - address
+      responses:
+        '401':
+          description: unauthorized
+        '201':
+          description: created
+        '422':
+          description: invalid_request
+  "/admin/restaurants/{id}":
+    patch:
+      summary: update restaurant
+      tags:
+      - Restaurants
+      parameters:
+      - name: id
+        in: path
+        type: integer
+        description: id
+        required: true
+      - name: restaurant
+        in: body
+        schema:
+          type: object
+          properties:
+            data:
+              type: object
+              properties:
+                name:
+                  type: string
+                address:
+                  type: string
+          required:
+          - name
+          - address
+      security:
+      - Bearer: {}
+      responses:
+        '401':
+          description: unauthorized
+        '200':
+          description: success
+    delete:
+      summary: delete restaurant
+      tags:
+      - Restaurants
+      parameters:
+      - name: id
+        in: path
+        type: integer
+        description: id
+        required: true
+      security:
+      - Bearer: {}
+      responses:
+        '204':
+          description: no_content
+        '401':
+          description: unauthorized
+  "/admin/users":
+    get:
+      summary: list managers
+      tags:
+      - Managers
+      security:
+      - Bearer: {}
+      responses:
+        '200':
+          description: success
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                properties:
+                  id:
+                    type: integer
+                  name:
+                    type: string
+                  email:
+                    type: string
+                  role:
+                    type: string
+    post:
+      summary: create manager
+      tags:
+      - Managers
+      consumes:
+      - application/json
+      security:
+      - Bearer: {}
+      parameters:
+      - name: user
+        in: body
+        schema:
+          type: object
+          properties:
+            data:
+              type: object
+              properties:
+                name:
+                  type: string
+                email:
+                  type: string
+                restaurant_id:
+                  type: integer
+          required:
+          - name
+          - email
+          - restaurant_id
+      responses:
+        '401':
+          description: unauthorized
+        '201':
+          description: created
+        '422':
+          description: invalid_request
+  "/admin/users/{id}":
+    patch:
+      summary: update manager
+      tags:
+      - Managers
+      parameters:
+      - name: id
+        in: path
+        type: integer
+        description: id
+        required: true
+      - name: user
+        in: body
+        schema:
+          type: object
+          properties:
+            data:
+              type: object
+              properties:
+                name:
+                  type: string
+                email:
+                  type: string
+                restaurant_id:
+                  type: integer
+      security:
+      - Bearer: {}
+      responses:
+        '401':
+          description: unauthorized
+        '200':
+          description: success
+        '422':
+          description: invalid_request
+  "/customer/reservations":
+    post:
+      summary: create reservation
+      tags:
+      - Reservations
+      consumes:
+      - application/json
+      security:
+      - Bearer: {}
+      parameters:
+      - name: reservation
+        in: body
+        schema:
+          type: object
+          properties:
+            data:
+              type: object
+              properties:
+                table_id:
+                  type: integer
+                datetime:
+                  type: string
+                  format: datetime
+          required:
+          - table_id
+          - datetime
+      responses:
+        '401':
+          description: unauthorized
+        '201':
+          description: created
+        '422':
+          description: invalid_request
+  "/customer/restaurants":
+    get:
+      summary: list restaurants
+      tags:
+      - Restaurants
+      security:
+      - Bearer: {}
+      responses:
+        '200':
+          description: success
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                properties:
+                  id:
+                    type: integer
+                  name:
+                    type: string
+                  address:
+                    type: string
+                  manager:
+                    type: integer
+                  tables:
+                    type: array
+                    properties:
+                      id:
+                        type: integer
+                      restaurant_id:
+                        type: integer
+                      seats:
+                        type: integer
+                  images:
+                    type: array
+                    properties:
+                      image_url:
+                        type: string
+  "/customer/restaurants/{restaurant_id}/tables":
+    get:
+      summary: list tables
+      tags:
+      - Tables
+      parameters:
+      - name: restaurant_id
+        in: path
+        type: integer
+        description: restaurant_id
+        required: true
+      security:
+      - Bearer: {}
+      responses:
+        '200':
+          description: success
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                properties:
+                  id:
+                    type: integer
+                  restaurant:
+                    type: string
+                  seats:
+                    type: integer
+                  description:
+                    type: string
+  "/manager/restaurants/{restaurant_id}/calendars":
+    parameters:
+    - name: restaurant_id
+      in: path
+      type: integer
+      description: restaurant_id
+      required: true
+    post:
+      summary: create calendar
+      tags:
+      - Calendars
+      consumes:
+      - application/json
+      security:
+      - Bearer: {}
+      parameters:
+      - name: calendar
+        in: body
+        schema:
+          type: object
+          properties:
+            data:
+              type: object
+              properties:
+                date:
+                  type: string
+                  format: datetime
+                reason:
+                  type: string
+          required:
+          - date
+      responses:
+        '401':
+          description: unauthorized
+        '201':
+          description: created
+        '422':
+          description: invalid_request
+  "/manager/restaurants/{restaurant_id}/calendars/{id}":
+    parameters:
+    - name: restaurant_id
+      in: path
+      type: integer
+      description: restaurant_id
+      required: true
+    - name: id
+      in: path
+      type: integer
+      description: id
+      required: true
+    patch:
+      summary: update calendar
+      tags:
+      - Calendars
+      security:
+      - Bearer: {}
+      parameters:
+      - name: calendar
+        in: body
+        schema:
+          type: object
+          properties:
+            data:
+              type: object
+              properties:
+                date:
+                  type: string
+                  format: datetime
+                reason:
+                  type: string
+      responses:
+        '401':
+          description: unauthorized
+        '200':
+          description: success
+    delete:
+      summary: delete calendar
+      tags:
+      - Calendars
+      security:
+      - Bearer: {}
+      responses:
+        '204':
+          description: no_content
+        '401':
+          description: unauthorized
+  "/manager/restaurants/{restaurant_id}/office_hours":
+    parameters:
+    - name: restaurant_id
+      in: path
+      type: string
+      description: restaurant_id
+      required: true
+    post:
+      summary: create office_hour
+      tags:
+      - Office Hours
+      consumes:
+      - application/json
+      security:
+      - Bearer: {}
+      parameters:
+      - name: office_hour
+        in: body
+        schema:
+          type: object
+          properties:
+            data:
+              type: object
+              properties:
+                day:
+                  type: integer
+                open:
+                  type: string
+                  format: time
+                close:
+                  type: string
+                  format: time
+          required:
+          - day
+          - open
+          - close
+      responses:
+        '401':
+          description: unauthorized
+        '201':
+          description: created
+        '422':
+          description: invalid_request
+  "/manager/restaurants/{restaurant_id}/office_hours/{id}":
+    parameters:
+    - name: restaurant_id
+      in: path
+      type: string
+      description: restaurant_id
+      required: true
+    - name: id
+      in: path
+      type: string
+      description: id
+      required: true
+    patch:
+      summary: update office_hour
+      tags:
+      - Office Hours
+      security:
+      - Bearer: {}
+      parameters:
+      - name: office_hour
+        in: body
+        schema:
+          type: object
+          properties:
+            data:
+              type: object
+              properties:
+                day:
+                  type: integer
+                open:
+                  type: string
+                  format: time
+                close:
+                  type: string
+                  format: time
+      responses:
+        '401':
+          description: unauthorized
+        '200':
+          description: success
+    delete:
+      summary: delete office_hour
+      tags:
+      - Office Hours
+      security:
+      - Bearer: {}
+      responses:
+        '204':
+          description: no_content
+        '401':
+          description: unauthorized
+  "/manager/reservations/{customer_code}":
+    parameters:
+    - name: customer_code
+      in: path
+      type: string
+      description: customer_code
+      required: true
+    get:
+      summary: show reservation
+      tags:
+      - Reservations
+      security:
+      - Bearer: {}
+      responses:
+        '401':
+          description: unauthorized
+        '200':
+          description: success
+          schema:
+            type: object
+            properties:
+              id:
+                type: integer
+              table_id:
+                type: integer
+              restaurant:
+                type: string
+              datetime:
+                type: string
+                format: datetime
+              status:
+                type: string
+              customer_code:
+                type: string
+    patch:
+      summary: update reservation
+      tags:
+      - Reservations
+      parameters:
+      - name: Authorization
+        in: header
+        type: string
+        default: 'Bearer '
+      responses:
+        '401':
+          description: unauthorized
+        '200':
+          description: success
+    delete:
+      summary: delete reservation
+      tags:
+      - Reservations
+      parameters:
+      - name: Authorization
+        in: header
+        type: string
+        default: 'Bearer '
+      responses:
+        '204':
+          description: no_content
+        '401':
+          description: unauthorized
+  "/manager/restaurants/{restaurant_id}/tables":
+    parameters:
+    - name: restaurant_id
+      in: path
+      type: integer
+      description: restaurant_id
+      required: true
+    post:
+      summary: create table
+      tags:
+      - Tables
+      consumes:
+      - application/json
+      security:
+      - Bearer: {}
+      parameters:
+      - name: table
+        in: body
+        schema:
+          type: object
+          properties:
+            data:
+              type: object
+              properties:
+                seats:
+                  type: integer
+                description:
+                  type: string
+          required:
+          - seats
+      responses:
+        '401':
+          description: unauthorized
+        '201':
+          description: created
+        '422':
+          description: invalid_request
+  "/manager/restaurants/{restaurant_id}/tables/{id}":
+    parameters:
+    - name: restaurant_id
+      in: path
+      type: integer
+      description: restaurant_id
+      required: true
+    - name: id
+      in: path
+      type: integer
+      description: id
+      required: true
+    delete:
+      summary: delete table
+      tags:
+      - Tables
+      security:
+      - Bearer: {}
+      responses:
+        '204':
+          description: no_content
+        '401':
+          description: unauthorized
+  "/oauth/token":
+    post:
+      summary: get access token
+      tags:
+      - Oauth
+      consumes:
+      - application/json
+      parameters:
+      - name: token
+        in: body
+        schema:
+          type: object
+          properties:
+            grant_type:
+              type: string
+            provider:
+              type: string
+            assertion:
+              type: string
+            scope:
+              type: string
+          required:
+          - grant_type
+          - provider
+          - assertion
+          - scope
+      responses:
+        '401':
+          description: unauthorized
+        '200':
+          description: created
 securityDefinitions:
   Bearer:
-    description: "..."
+    description: "Enter the token with the `Bearer: ` prefix, e.g. 'Bearer abcde12345'"
     type: apiKey
     name: Authorization
     in: header
