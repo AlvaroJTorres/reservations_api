@@ -9,11 +9,11 @@ module Operations
       step :delete_table
 
       def find_restaurant(options, restaurant_id:, **)
-        options[:restaurant] = Restaurant.find_by!(id: restaurant_id)
+        raise CustomError.new(nil, 'Restaurant not found', 404, nil) unless options[:restaurant] = Restaurant.find_by!(id: restaurant_id)
       end
 
       def find_table(options, table_id:, **)
-        options[:model] = options[:restaurant].tables.find_by!(id: table_id)
+        raise CustomError.new(nil, 'Table not found', 404, nil) unless options[:model] = options[:restaurant].tables.find_by!(id: table_id)
       end
 
       def delete_table(options, **)
