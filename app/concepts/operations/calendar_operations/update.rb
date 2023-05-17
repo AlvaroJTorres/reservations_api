@@ -5,7 +5,7 @@ module Operations
     # Operation to update Calendars on API
     class Update < Trailblazer::Operation
       pass :find_restaurant
-      pass :find_user
+      pass :find_calendar
       step :validate_calendar
       fail :validations_errors!
       step :update_model
@@ -15,12 +15,13 @@ module Operations
         options[:restaurant] = Restaurant.find_by!(id: restaurant_id)
       end
 
-      def find_user(options, calendar_id:, **)
+      def find_calendar(options, calendar_id:, **)
         options[:model] = options[:restaurant].calendars.find_by!(id: calendar_id)
       end
 
       def validate_calendar(options, params:, **)
         options[:form] = Forms::CalendarForm.new(options[:model])
+        params[:date] = options[:model][:date].strftime("%d/%m/%Y") if params[:date].nil?
         options[:form].validate(params)
       end
 
