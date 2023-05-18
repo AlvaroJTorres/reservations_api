@@ -5,6 +5,10 @@ class ApplicationController < ActionController::API
   include ErrorHandler
   include Pagy::Backend
 
+  def index
+    head 200
+  end
+
   def doorkeeper_unauthorized_render_options(*)
     { json: { errors: ['Not authorized'] } }
   end
